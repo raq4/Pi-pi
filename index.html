@@ -27,60 +27,43 @@
             object-fit: cover;
             cursor: pointer;
         }
-        
-        .play-button {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #000;
-            color: #0f0;
-            border: 3px solid #0f0;
-            padding: 20px 50px;
-            font-size: 28px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            z-index: 100;
-        }
-        
-        .play-button:hover {
-            background: #0f0;
-            color: #000;
-        }
-        
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <img src="IMG_9623.png" class="fullscreen-image">
-    <button class="play-button" onclick="startMusic()">▶️ ВКЛЮЧИТЬ МУЗЫКУ</button>
+    <img src="IMG_9623.png" class="fullscreen-image" onclick="playMusic()">
 
     <script>
         let audio = null;
-        let started = false;
+        let musicPlaying = false;
         
-        function startMusic() {
-            if (!started) {
-                // Создаем аудио элемент
-                audio = new Audio('sound_03850.mp3');
+        function playMusic() {
+            if (!musicPlaying) {
+                if (!audio) {
+                    audio = new Audio('sound_03850.mp3');
+                    
+                    audio.addEventListener('error', function() {
+                        console.log('Ошибка загрузки музыки');
+                    });
+                }
                 
-                // Воспроизводим
                 audio.play().then(function() {
-                    document.querySelector('.play-button').classList.add('hidden');
-                    started = true;
+                    musicPlaying = true;
                 }).catch(function(error) {
-                    alert('Нажмите еще раз для включения музыки');
+                    console.log('Ошибка воспроизведения:', error);
                 });
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+                musicPlaying = false;
             }
         }
         
-        // Автоматическое нажатие через 3 секунды
+        // Автозапуск при загрузке (работает на десктопе)
         setTimeout(function() {
-            document.querySelector('.play-button').click();
-        }, 3000);
+            if (!musicPlaying) {
+                document.querySelector('.fullscreen-image').click();
+            }
+        }, 1000);
     <\/script>
 </body>
 </html>
