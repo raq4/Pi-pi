@@ -1,15 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
-    <style>body{margin:0;} img{width:100%;height:100%;object-fit:cover;}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Музыкальный сайт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        .fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <img src="https://via.placeholder.com/800x600/FF0000/FFFFFF?text=TEST+IMAGE" onclick="new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3').play()">
-    
+    <img src="IMG_9623.png" class="fullscreen-image" onclick="playMusic()">
+
     <script>
-        setTimeout(() => document.querySelector('img').click(), 500);
-    </script>
+        let audio = null;
+        let musicPlaying = false;
+        
+        function playMusic() {
+            if (!musicPlaying) {
+                if (!audio) {
+                    audio = new Audio('sound_03850.mp3');
+                    
+                    audio.addEventListener('error', function() {
+                        console.log('Ошибка загрузки музыки');
+                    });
+                }
+                
+                audio.play().then(function() {
+                    musicPlaying = true;
+                }).catch(function(error) {
+                    console.log('Ошибка воспроизведения:', error);
+                });
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+                musicPlaying = false;
+            }
+        }
+        
+        // Автозапуск при загрузке (работает на десктопе)
+        setTimeout(function() {
+            if (!musicPlaying) {
+                document.querySelector('.fullscreen-image').click();
+            }
+        }, 1000);
+    <\/script>
 </body>
 </html>
