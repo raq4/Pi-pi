@@ -10,18 +10,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             background: #000;
             height: 100vh;
             overflow: hidden;
-            font-family: Arial, sans-serif;
         }
-        
-        .fullscreen-image {
-            position: fixed;
-            top: 0;
-            left: 0;
+        img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -30,40 +24,28 @@
     </style>
 </head>
 <body>
-    <img src="IMG_9623.png" class="fullscreen-image" onclick="playMusic()">
+    <img src="IMG_9623.png" onclick="playMusic()">
 
     <script>
         let audio = null;
-        let musicPlaying = false;
+        let played = false;
         
         function playMusic() {
-            if (!musicPlaying) {
+            if (!played) {
                 if (!audio) {
                     audio = new Audio('sound_03850.mp3');
-                    
-                    audio.addEventListener('error', function() {
-                        console.log('Ошибка загрузки музыки');
-                    });
+                    audio.play();
+                    played = true;
                 }
-                
-                audio.play().then(function() {
-                    musicPlaying = true;
-                }).catch(function(error) {
-                    console.log('Ошибка воспроизведения:', error);
-                });
-            } else {
-                audio.pause();
-                audio.currentTime = 0;
-                musicPlaying = false;
             }
         }
         
-        // Автозапуск при загрузке (работает на десктопе)
-        setTimeout(function() {
-            if (!musicPlaying) {
-                document.querySelector('.fullscreen-image').click();
-            }
-        }, 1000);
+        // Автозапуск при загрузке
+        window.onload = function() {
+            setTimeout(function() {
+                document.querySelector('img').click();
+            }, 500);
+        };
     <\/script>
 </body>
 </html>
